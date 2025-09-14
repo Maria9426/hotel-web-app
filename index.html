@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система управления отелем</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Административная панель гостиницы</h1>
+        <nav id="nav">
+            <button onclick="showSection('guests')">Гости</button>
+            <button onclick="showSection('rooms')">Номера</button>
+            <button onclick="showSection('bookings')">Бронирования</button>
+            <button onclick="showSection('prices')">Цены</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Секция гостей -->
+        <section id="guests-section" class="content-section">
+            <h2>Управление гостями</h2>
+            <button onclick="loadGuests()">Загрузить список гостей</button>
+            <div id="guests-list">Загрузка гостей...</div>
+            
+            <div class="form-section">
+                <h3>Добавить нового гостя</h3>
+                <form id="add-guest-form">
+                    <input type="text" id="guest-name" placeholder="ФИО" required>
+                    <input type="tel" id="guest-phone" placeholder="Телефон" required>
+                    <input type="email" id="guest-email" placeholder="Email">
+                    <div class="form-row">
+                        <input type="text" id="guest-passport-series" placeholder="Серия паспорта" maxlength="4">
+                        <input type="text" id="guest-passport-number" placeholder="Номер паспорта" maxlength="6">
+                    </div>
+                    <button type="submit">Добавить гостя</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Поиск гостя по телефону</h3>
+                <div class="search-box">
+                    <input type="tel" id="search-phone" placeholder="Введите телефон для поиска">
+                    <button onclick="searchGuestByPhone()">Найти</button>
+                </div>
+                <div id="search-result" class="search-result"></div>
+            </div>
+        </section>
+
+        <!-- Секция номеров -->
+        <section id="rooms-section" class="content-section" style="display: none;">
+            <h2>Управление номерами</h2>
+            <button onclick="loadRooms()">Загрузить все номера</button>
+            <div id="rooms-list">Загрузка номеров...</div>
+            
+            <div class="form-section">
+                <h3>Добавить новый номер</h3>
+                <form id="add-room-form">
+                    <input type="text" id="room-number" placeholder="Номер комнаты" required>
+                    <select id="room-category" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="Стандарт">Стандарт</option>
+                        <option value="Комфорт">Комфорт</option>
+                        <option value="Люкс">Люкс</option>
+                    </select>
+                    <select id="room-capacity" required>
+                        <option value="">Вместимость</option>
+                        <option value="1">1 человек</option>
+                        <option value="2">2 человека</option>
+                        <option value="3">3 человека</option>
+                    </select>
+                    <label>
+                        <input type="checkbox" id="room-child-bed"> Детская кровать
+                    </label>
+                    <button type="submit">Добавить номер</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Проверить доступность номеров</h3>
+                <div class="availability-form">
+                    <div class="form-row">
+                        <input type="date" id="check-in-date" required>
+                        <input type="date" id="check-out-date" required>
+                    </div>
+                    <button onclick="checkAvailability()">Проверить доступность</button>
+                </div>
+                <div id="available-rooms-list"></div>
+            </div>
+        </section>
+
+        <!-- Секция бронирований -->
+        <section id="bookings-section" class="content-section" style="display: none;">
+            <h2>Управление бронированиями</h2>
+            <button onclick="loadBookings()">Загрузить все бронирования</button>
+            <div id="bookings-list">Загрузка бронирований...</div>
+
+            <div class="form-section">
+                <h3>Создать новое бронирование</h3>
+                <form id="create-booking-form">
+                    <div class="form-group">
+                        <label>Даты бронирования:</label>
+                        <div class="form-row">
+                            <input type="date" id="booking-check-in" placeholder="Заезд" required>
+                            <input type="date" id="booking-check-out" placeholder="Выезд" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Поиск основного гостя:</label>
+                        <div class="search-box">
+                            <input type="tel" id="booking-guest-phone" placeholder="Телефон гостя">
+                            <button type="button" onclick="searchGuestForBooking()">Найти</button>
+                        </div>
+                        <div id="guest-search-result" class="search-result"></div>
+                        <input type="hidden" id="main-guest-id">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Выбор номера:</label>
+                        <div id="available-rooms-select"></div>
+                        <input type="hidden" id="selected-room-id">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Дополнительные гости:</label>
+                        <div id="additional-guests"></div>
+                        <button type="button" onclick="addGuestField()">Добавить гостя</button>
+                    </div>
+
+                    <button type="submit">Создать бронирование</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Секция цен -->
+        <section id="prices-section" class="content-section" style="display: none;">
+            <h2>Управление ценами</h2>
+            <button onclick="loadPrices()">Загрузить все цены</button>
+            <div id="prices-list">Загрузка цен...</div>
+
+            <div class="form-section">
+                <h3>Установить новую цену</h3>
+                <form id="add-price-form">
+                    <select id="price-room-id" required>
+                        <option value="">Выберите номер</option>
+                    </select>
+                    <select id="price-day" required>
+                        <option value="">День недели</option>
+                        <option value="понедельник">Понедельник</option>
+                        <option value="вторник">Вторник</option>
+                        <option value="среда">Среда</option>
+                        <option value="четверг">Четверг</option>
+                        <option value="пятница">Пятница</option>
+                        <option value="суббота">Суббота</option>
+                        <option value="воскресенье">Воскресенье</option>
+                    </select>
+                    <input type="number" id="price-amount" placeholder="Цена" min="0" step="0.01" required>
+                    <button type="submit">Установить цену</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
