@@ -103,7 +103,7 @@ input:focus, select:focus {
 .error { background: #e74c3c; }
 .success { background: #27ae60; }
 
-/* Адаптивность */
+/* Адаптивносnть */
 @media (max-width: 768px) {
     #nav { flex-direction: column; }
     #nav button { width: 100%; }
