@@ -58,7 +58,7 @@ function showSuccess(message) {
     setTimeout(() => successDiv.remove(), 5000);
 }
 
-// ==================== РАБОТА С ГОСТЯМИ ====================
+// ==================== РАБОТА С ГОСТЯМИ ==================
 async function loadGuests() {
     try {
         const guestsList = document.getElementById('guests-list');
